@@ -112,12 +112,8 @@
           </div>
         </section>
 
-        <section class="output-box">
-          <div class="run-log-title-row">
-            <h3>Run Log</h3>
-            <button id="skipLogBtn" class="tiny-button" type="button">Show instantly</button>
-          </div>
-          <ol id="runLog"></ol>
+        <section class="output-box run-log-dock" aria-label="Run Log launcher">
+          <button id="openRunLogBtn" class="run-log-floating-button" type="button" aria-haspopup="dialog" aria-controls="runLogModal">Run Log</button>
         </section>
 
         <section class="output-box pseudo-box">
@@ -164,6 +160,29 @@
       <div class="field-modal-actions">
         <button id="fieldModalCancel" class="secondary-button" type="button">Cancel</button>
         <button id="fieldModalSave" class="primary-button" type="button">Update Block</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="runLogModal" class="run-log-modal" hidden role="dialog" aria-modal="true" aria-labelledby="runLogModalTitle">
+    <div class="run-log-modal-backdrop" data-close-runlog></div>
+    <div class="run-log-modal-card" role="document">
+      <div class="run-log-modal-header">
+        <span class="run-log-modal-chip">RUN LOG</span>
+        <div>
+          <h3 id="runLogModalTitle">Encryption Process Log</h3>
+          <p>See every message change clearly, step by step.</p>
+        </div>
+        <button id="runLogClose" class="field-modal-close" type="button" aria-label="Close Run Log">×</button>
+      </div>
+      <div class="run-log-toolbar">
+        <span class="run-log-hint">Tip: use this window during presentation to explain how the cipher works.</span>
+        <button id="skipLogBtn" class="tiny-button" type="button">Show instantly</button>
+      </div>
+      <ol id="runLog" class="run-log-list"></ol>
+      <div class="run-log-modal-actions">
+        <button id="runLogDone" class="primary-button" type="button">Back to Workspace</button>
       </div>
     </div>
   </div>

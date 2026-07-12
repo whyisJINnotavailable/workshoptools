@@ -617,6 +617,10 @@ const liveMessage = document.getElementById("liveMessage");
 const pseudoCode = document.getElementById("pseudoCode");
 const importFileInput = document.getElementById("importFileInput");
 const skipLogBtn = document.getElementById("skipLogBtn");
+const openRunLogBtn = document.getElementById("openRunLogBtn");
+const runLogModal = document.getElementById("runLogModal");
+const runLogClose = document.getElementById("runLogClose");
+const runLogDone = document.getElementById("runLogDone");
 const appMessageModal = document.getElementById("appMessageModal");
 const appMessageTitle = document.getElementById("appMessageTitle");
 const appMessageBody = document.getElementById("appMessageBody");
@@ -700,6 +704,7 @@ function init() {
   bindTrashEvents();
   bindButtons();
   bindFieldModalEvents();
+  bindRunLogModalEvents();
   bindAppMessageEvents();
   updateWorkspaceTabUI();
   updateWorkspaceState();
@@ -1077,6 +1082,40 @@ function closeAppMessage() {
   }, 160);
 }
 
+function openRunLogModal() {
+  if (!runLogModal) return;
+  if (!latestLogItems.length && runLog && runLog.children.length === 0) {
+    renderLogImmediately(["No Run Log yet. Click Run after building your encryption stages."]);
+  }
+  runLogModal.hidden = false;
+  document.body.classList.add("modal-open");
+  window.requestAnimationFrame(() => runLogModal.classList.add("run-log-modal-open"));
+  if (runLog) runLog.scrollTop = 0;
+  runLogClose?.focus({ preventScroll: true });
+}
+
+function closeRunLogModal() {
+  if (!runLogModal) return;
+  runLogModal.classList.remove("run-log-modal-open");
+  document.body.classList.remove("modal-open");
+  window.setTimeout(() => {
+    runLogModal.hidden = true;
+    openRunLogBtn?.focus({ preventScroll: true });
+  }, 160);
+}
+
+function bindRunLogModalEvents() {
+  if (!runLogModal) return;
+  runLogClose?.addEventListener("click", closeRunLogModal);
+  runLogDone?.addEventListener("click", closeRunLogModal);
+  runLogModal.querySelectorAll("[data-close-runlog]").forEach((element) => {
+    element.addEventListener("click", closeRunLogModal);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !runLogModal.hidden) closeRunLogModal();
+  });
+}
+
 function bindAppMessageEvents() {
   if (!appMessageModal) return;
   appMessageOk?.addEventListener("click", closeAppMessage);
@@ -1327,6 +1366,7 @@ function bindButtons() {
   document.getElementById("importBtn")?.addEventListener("click", () => importFileInput?.click());
   importFileInput?.addEventListener("change", importProgramFromFile);
   skipLogBtn?.addEventListener("click", finishTypingLog);
+  openRunLogBtn?.addEventListener("click", openRunLogModal);
   document.getElementById("sampleCaesarBtn").addEventListener("click", loadCaesarSample);
   document.getElementById("sampleEnigmaBtn").addEventListener("click", loadMiniEnigmaSample);
   document.querySelectorAll("[data-load-sample]").forEach((button) => {
@@ -2224,6 +2264,10 @@ function countDifferentCharacters(before, after) {
 function renderOutput(ctx) {
   liveMessage.value = ctx.message;
   typeRunLog(ctx.logs);
+  openRunLogBtn?.classList.toggle("has-log", Boolean(ctx.logs?.length));
+  if (ctx.logs?.length) {
+    openRunLogBtn?.setAttribute("aria-label", `Open Run Log with ${ctx.logs.length} step(s)`);
+  }
 }
 
 function typeRunLog(items) {
