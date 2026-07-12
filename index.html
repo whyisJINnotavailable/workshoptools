@@ -41,7 +41,7 @@
         <div class="panel-title-row workspace-title">
           <div>
             <h2>Workspace</h2>
-            <p>Build the process step by step. Blocks run from top to bottom.</p>
+            <p>Build three encryption stages. Each tab runs from top to bottom, then passes the message forward.</p>
           </div>
           <div class="workspace-actions">
             <button id="runBtn" class="primary-button" type="button">▶ Run</button>
@@ -54,10 +54,19 @@
           </div>
         </div>
 
-        <div id="workspace" class="workspace empty" aria-label="Program workspace">
+        <div id="workspaceStageTabs" class="workspace-stage-tabs" role="tablist" aria-label="Encryption process stages">
+          <button class="workspace-stage-tab active" type="button" role="tab" aria-selected="true" data-workspace-tab="stage1">1 Input Lock</button>
+          <button class="workspace-stage-tab" type="button" role="tab" aria-selected="false" data-workspace-tab="stage2">2 Middle Lock</button>
+          <button class="workspace-stage-tab" type="button" role="tab" aria-selected="false" data-workspace-tab="stage3">3 Final Lock</button>
+        </div>
+        <div id="workspaceStageNote" class="workspace-stage-note">
+          Stage 1 should start with a message, encrypt it, then send it to Stage 2.
+        </div>
+
+        <div id="workspace" class="workspace empty" data-active-workspace="stage1" aria-label="Program workspace for Stage 1">
           <div class="empty-hint">
             <strong>Start here!</strong>
-            <span>Click or drag blocks from the left side into this area.</span>
+            <span>Click or drag blocks into this encryption stage.</span>
           </div>
         </div>
       </section>

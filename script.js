@@ -26,6 +26,22 @@ const blockDefinitions = [
     description: "Ask the student to type the first message.",
     fields: []
   },
+  {
+    type: "event_send_message",
+    category: "Events",
+    subcategory: "Message transfer",
+    title: "Send message to",
+    description: "Sends the current message to another workspace tab.",
+    fields: [{ name: "targetTab", type: "select", value: "Tab 2", options: ["Tab 1", "Tab 2", "Tab 3"] }]
+  },
+  {
+    type: "event_receive_message",
+    category: "Events",
+    subcategory: "Message transfer",
+    title: "Receive message from",
+    description: "Receives the message sent from another workspace tab.",
+    fields: [{ name: "sourceTab", type: "select", value: "Tab 1", options: ["Tab 1", "Tab 2", "Tab 3"] }]
+  },
 
   // Text preparation.
   {
@@ -555,10 +571,42 @@ const encryptionBlockTypes = new Set([
 
 const categories = ["Events", "Text", "Lists", "Variables", "Loops", "Letter Math", "Cipher Pieces", "Encoding", "Ready-Made", "Logic", "Output"];
 let activeCategory = "Events";
+const workspaceStages = [
+  {
+    id: "stage1",
+    tabName: "Tab 1",
+    label: "Stage 1",
+    buttonLabel: "1 Input Lock",
+    note: "Stage 1 should start with a user/pre-input message, encrypt it, then send it to Stage 2."
+  },
+  {
+    id: "stage2",
+    tabName: "Tab 2",
+    label: "Stage 2",
+    buttonLabel: "2 Middle Lock",
+    note: "Stage 2 should receive the message from Stage 1, encrypt again, then send it to Stage 3."
+  },
+  {
+    id: "stage3",
+    tabName: "Tab 3",
+    label: "Stage 3",
+    buttonLabel: "3 Final Lock",
+    note: "Stage 3 should receive the message from Stage 2, perform the final encryption, then display the final cipher text."
+  }
+];
+let activeWorkspaceTab = "stage1";
+const workspacePrograms = {
+  stage1: [],
+  stage2: [],
+  stage3: []
+};
+let isLoadingWorkspace = false;
 let draggedElement = null;
 let draggedFromPalette = false;
 
 const workspace = document.getElementById("workspace");
+const workspaceTabButtons = document.querySelectorAll("[data-workspace-tab]");
+const workspaceStageNote = document.getElementById("workspaceStageNote");
 const palette = document.getElementById("blockPalette");
 const tabs = document.getElementById("categoryTabs");
 const toolbox = document.querySelector(".toolbox");
@@ -632,15 +680,28 @@ function findDefinition(type) {
   return blockDefinitions.find((block) => block.type === type);
 }
 
+function getStageAwareBlockValues(type, values = {}) {
+  const nextValues = { ...(values || {}) };
+  if (type === "event_send_message" && nextValues.targetTab === undefined) {
+    nextValues.targetTab = activeWorkspaceTab === "stage1" ? "Tab 2" : "Tab 3";
+  }
+  if (type === "event_receive_message" && nextValues.sourceTab === undefined) {
+    nextValues.sourceTab = activeWorkspaceTab === "stage3" ? "Tab 2" : "Tab 1";
+  }
+  return nextValues;
+}
+
 function init() {
   initSoundEffects();
   renderTabs();
   renderPalette();
+  bindWorkspaceTabEvents();
   bindWorkspaceEvents();
   bindTrashEvents();
   bindButtons();
   bindFieldModalEvents();
   bindAppMessageEvents();
+  updateWorkspaceTabUI();
   updateWorkspaceState();
   updatePseudoCode();
 }
@@ -759,6 +820,7 @@ function addBlockToWorkspace(type, values = {}) {
   workspace.appendChild(newBlock);
   updateWorkspaceState();
   updatePseudoCode();
+  syncActiveWorkspaceBlocks();
   playSoundEffect("connect");
   newBlock.classList.add("added-pop");
   window.setTimeout(() => newBlock.classList.remove("added-pop"), 320);
@@ -770,6 +832,7 @@ function addBlockToWorkspace(type, values = {}) {
 function createProgramBlock(type, values = {}) {
   const definition = findDefinition(type);
   if (!definition) return null;
+  const blockValues = getStageAwareBlockValues(type, values);
 
   const node = blockTemplate.content.firstElementChild.cloneNode(true);
   node.dataset.type = definition.type;
@@ -782,7 +845,7 @@ function createProgramBlock(type, values = {}) {
 
   const fieldsContainer = node.querySelector(".block-fields");
   definition.fields.forEach((field) => {
-    const fieldElement = createFieldElement(field, values[field.name] ?? field.value);
+    const fieldElement = createFieldElement(field, blockValues[field.name] ?? field.value);
     fieldsContainer.appendChild(fieldElement);
   });
 
@@ -790,6 +853,7 @@ function createProgramBlock(type, values = {}) {
     node.remove();
     updateWorkspaceState();
     updatePseudoCode();
+    syncActiveWorkspaceBlocks();
     playSoundEffect("trash");
   });
 
@@ -944,6 +1008,8 @@ function openFieldModal(hiddenInput, field, display) {
 
 function getFieldHelpText(field) {
   const name = field.name;
+  if (name === "targetTab") return "Choose which workspace tab should receive the current message.";
+  if (name === "sourceTab") return "Choose which previous workspace tab this stage should receive from.";
   if (name === "message") return "Type the plain text message that enters the secret machine.";
   if (name === "customAlphabet") return "Enter a 26-letter scrambled alphabet. Duplicate letters will be cleaned when the block runs.";
   if (name === "keyword" || name === "keyText") return "Type a secret word. The machine can use it to build a key or shift number.";
@@ -1036,6 +1102,123 @@ function bindFieldModalEvents() {
   });
 }
 
+
+function getWorkspaceStage(id) {
+  return workspaceStages.find((stage) => stage.id === id) || workspaceStages[0];
+}
+
+function normalizeWorkspaceTab(value) {
+  const text = String(value || "").toLowerCase().trim();
+  if (["stage1", "tab1", "tab 1", "1"].includes(text) || text.includes("1")) return "stage1";
+  if (["stage2", "tab2", "tab 2", "2"].includes(text) || text.includes("2")) return "stage2";
+  if (["stage3", "tab3", "tab 3", "3"].includes(text) || text.includes("3")) return "stage3";
+  return "stage1";
+}
+
+function workspaceTabName(id) {
+  return getWorkspaceStage(id).tabName;
+}
+
+function bindWorkspaceTabEvents() {
+  workspaceTabButtons.forEach((button) => {
+    button.addEventListener("click", () => switchWorkspaceTab(button.dataset.workspaceTab));
+  });
+}
+
+function switchWorkspaceTab(tabId) {
+  const nextTab = normalizeWorkspaceTab(tabId);
+  if (nextTab === activeWorkspaceTab) return;
+  syncActiveWorkspaceBlocks();
+  activeWorkspaceTab = nextTab;
+  loadBlocks(workspacePrograms[activeWorkspaceTab] || [], { skipSync: true });
+  updateWorkspaceTabUI();
+  updateWorkspaceState();
+  updatePseudoCode();
+}
+
+function updateWorkspaceTabUI() {
+  const stage = getWorkspaceStage(activeWorkspaceTab);
+  workspaceTabButtons.forEach((button) => {
+    const isActive = button.dataset.workspaceTab === activeWorkspaceTab;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  if (workspace) {
+    workspace.dataset.activeWorkspace = activeWorkspaceTab;
+    workspace.setAttribute("aria-label", `Program workspace for ${stage.label}`);
+  }
+  if (workspaceStageNote) workspaceStageNote.textContent = stage.note;
+}
+
+function getSerializableBlocksFromWorkspace() {
+  return [...workspace.querySelectorAll(".program-block")].map((node) => {
+    const values = {};
+    node.querySelectorAll("[data-field]").forEach((field) => {
+      values[field.dataset.field] = field.value;
+    });
+    return { type: node.dataset.type, values };
+  });
+}
+
+function syncActiveWorkspaceBlocks() {
+  if (isLoadingWorkspace || !workspacePrograms[activeWorkspaceTab]) return;
+  workspacePrograms[activeWorkspaceTab] = getSerializableBlocksFromWorkspace();
+}
+
+function getAllWorkspacePrograms() {
+  syncActiveWorkspaceBlocks();
+  return Object.fromEntries(workspaceStages.map((stage) => [
+    stage.id,
+    (workspacePrograms[stage.id] || []).map((block) => ({
+      type: block.type,
+      values: { ...(block.values || {}) }
+    }))
+  ]));
+}
+
+function countAllWorkspaceBlocks(programs = getAllWorkspacePrograms()) {
+  return workspaceStages.reduce((total, stage) => total + ((programs[stage.id] || []).length), 0);
+}
+
+function hydrateBlocks(blocks = []) {
+  return blocks.map((block) => ({
+    type: block.type,
+    values: block.values || {},
+    definition: findDefinition(block.type)
+  })).filter((block) => block.definition);
+}
+
+function loadProjectData(data) {
+  const projectWorkspaces = data?.workspaces || data?.workspaceTabs || null;
+  if (projectWorkspaces && typeof projectWorkspaces === "object") {
+    workspaceStages.forEach((stage) => {
+      workspacePrograms[stage.id] = Array.isArray(projectWorkspaces[stage.id])
+        ? projectWorkspaces[stage.id].map((block) => ({ type: block.type, values: block.values || {} }))
+        : [];
+    });
+  } else {
+    const blocks = Array.isArray(data) ? data : data?.blocks;
+    if (!Array.isArray(blocks)) throw new Error("Missing blocks or workspaces.");
+    workspacePrograms.stage1 = blocks.map((block) => ({ type: block.type, values: block.values || {} }));
+    workspacePrograms.stage2 = [];
+    workspacePrograms.stage3 = [];
+  }
+
+  activeWorkspaceTab = "stage1";
+  loadBlocks(workspacePrograms[activeWorkspaceTab], { skipSync: true });
+  updateWorkspaceTabUI();
+}
+
+function createProjectPackage() {
+  return {
+    app: "CyberBlock Lab",
+    version: "0.3.0-three-stage",
+    projectType: "three-stage-encryption-machine",
+    exportedAt: new Date().toISOString(),
+    workspaces: getAllWorkspacePrograms()
+  };
+}
+
 function bindWorkspaceEvents() {
   workspace.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -1074,6 +1257,7 @@ function bindWorkspaceEvents() {
 
     updateWorkspaceState();
     updatePseudoCode();
+    syncActiveWorkspaceBlocks();
   });
 }
 
@@ -1101,6 +1285,7 @@ function bindTrashEvents() {
     showTrashBin(false);
     updateWorkspaceState();
     updatePseudoCode();
+    syncActiveWorkspaceBlocks();
     playSoundEffect("trash");
   });
 }
@@ -1131,6 +1316,7 @@ function bindButtons() {
   document.getElementById("runBtn").addEventListener("click", runProgram);
   document.getElementById("clearBtn").addEventListener("click", () => {
     workspace.querySelectorAll(".program-block").forEach((block) => block.remove());
+    workspacePrograms[activeWorkspaceTab] = [];
     updateWorkspaceState();
     updatePseudoCode();
     clearOutput();
@@ -1193,6 +1379,8 @@ function createContext() {
     keyLetterValue: 0,
     vars: { shift: 0, rotor: 0, key: "", rounds: 1, total: 0 },
     arrays: { alphabet, customAlphabet: "QWERTYUIOPASDFGHJKLZXCVBNM", chars: [], tokens: [], morse: morseMap, reverseMorse: reverseMorseMap },
+    workspaceMessages: {},
+    currentWorkspaceTab: activeWorkspaceTab,
     logs: [],
     step: 0
   };
@@ -1203,16 +1391,38 @@ function runProgram() {
   void document.body.offsetWidth;
   document.body.classList.add("run-flash");
   window.setTimeout(() => document.body.classList.remove("run-flash"), 520);
-  const blocks = getProgramBlocks();
+
+  const programs = getAllWorkspacePrograms();
   const ctx = createContext();
 
-  if (blocks.length === 0) {
-    ctx.logs.push("Add some blocks first. Try loading a sample project.");
+  if (countAllWorkspaceBlocks(programs) === 0) {
+    ctx.logs.push("Add blocks to the three workspace tabs first. Stage 1 should send to Stage 2, and Stage 2 should send to Stage 3.");
     renderOutput(ctx);
     return;
   }
 
-  executeBlocks(blocks, ctx, 0, blocks.length);
+  workspaceStages.forEach((stage) => {
+    const stageBlocks = hydrateBlocks(programs[stage.id] || []);
+    ctx.currentWorkspaceTab = stage.id;
+
+    if (!stageBlocks.length) {
+      addInfoLog(ctx, `${stage.label} skipped`, [
+        `${stage.tabName} has no blocks yet.`,
+        stage.note
+      ]);
+      return;
+    }
+
+    addInfoLog(ctx, `${stage.label} started`, [
+      `${stage.tabName} is now running ${stageBlocks.length} block(s).`,
+      stage.note
+    ]);
+    executeBlocks(stageBlocks, ctx, 0, stageBlocks.length);
+    addInfoLog(ctx, `${stage.label} finished`, [
+      `Message after ${stage.tabName}: ${formatMessageForLog(ctx.message)}.`
+    ]);
+  });
+
   renderOutput(ctx);
 }
 
@@ -1373,6 +1583,32 @@ function executeSingleBlock(block, ctx) {
       ctx.message = answer ?? ctx.message;
       addChangeLog(ctx, "Ask for message", before, ctx.message, [
         "The typed answer becomes the new plain text input."
+      ]);
+      break;
+    }
+    case "event_send_message": {
+      const targetTab = normalizeWorkspaceTab(v.targetTab);
+      ctx.workspaceMessages[targetTab] = ctx.message;
+      addInfoLog(ctx, `Send message to ${workspaceTabName(targetTab)}`, [
+        `Message sent: ${formatMessageForLog(ctx.message)}.`,
+        `${workspaceTabName(targetTab)} can receive this message using the Receive message block.`
+      ]);
+      break;
+    }
+    case "event_receive_message": {
+      const sourceTab = normalizeWorkspaceTab(v.sourceTab);
+      const currentTab = ctx.currentWorkspaceTab || activeWorkspaceTab;
+      const hasDirectInbox = Object.prototype.hasOwnProperty.call(ctx.workspaceMessages, currentTab);
+      const hasSourceInbox = Object.prototype.hasOwnProperty.call(ctx.workspaceMessages, sourceTab);
+      before = ctx.message;
+      ctx.message = hasDirectInbox ? ctx.workspaceMessages[currentTab] : hasSourceInbox ? ctx.workspaceMessages[sourceTab] : "";
+      addChangeLog(ctx, `Receive message from ${workspaceTabName(sourceTab)}`, before, ctx.message, [
+        hasDirectInbox
+          ? `${workspaceTabName(currentTab)} received the message that was sent to it.`
+          : hasSourceInbox
+            ? `No direct inbox was found, so the machine used the latest message stored by ${workspaceTabName(sourceTab)}.`
+            : `No message has been sent from ${workspaceTabName(sourceTab)} yet.`,
+        "This block lets one encryption stage continue from a previous stage."
       ]);
       break;
     }
@@ -2061,31 +2297,36 @@ function finishTypingLog() {
 }
 
 function updatePseudoCode() {
+  if (!isLoadingWorkspace) syncActiveWorkspaceBlocks();
   const blocks = getProgramBlocks();
+  const stage = getWorkspaceStage(activeWorkspaceTab);
   if (blocks.length === 0) {
-    pseudoCode.textContent = "No blocks yet.";
+    pseudoCode.textContent = `${stage.label}: No blocks yet.`;
     return;
   }
 
-  pseudoCode.textContent = blocks.map((block, index) => {
-    const title = block.definition?.title || block.type;
-    const fields = Object.entries(block.values)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(", ");
-    return `${index + 1}. ${title}${fields ? ` (${fields})` : ""}`;
-  }).join("\n");
+  pseudoCode.textContent = [
+    `${stage.label} (${stage.buttonLabel})`,
+    ...blocks.map((block, index) => {
+      const title = block.definition?.title || block.type;
+      const fields = Object.entries(block.values)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(", ");
+      return `${index + 1}. ${title}${fields ? ` (${fields})` : ""}`;
+    })
+  ].join("\n");
 }
 
 function getSerializableBlocks() {
-  return getProgramBlocks().map((block) => ({ type: block.type, values: block.values }));
+  return getSerializableBlocksFromWorkspace();
 }
 
 function saveProgram() {
-  const blocks = getSerializableBlocks();
-  localStorage.setItem("cyberblock-program", JSON.stringify(blocks));
+  const project = createProjectPackage();
+  localStorage.setItem("cyberblock-program", JSON.stringify(project));
   showAppMessage("Program saved", [
-    "Your blocks were saved inside this app/browser on this device.",
-    "Use Export if you want to move the project to another computer."
+    "All three workspace tabs were saved inside this app/browser on this device.",
+    "Use Export if you want to create a .cyberblock file for another computer."
   ]);
 }
 
@@ -2093,17 +2334,17 @@ function loadProgram() {
   const data = localStorage.getItem("cyberblock-program");
   if (!data) {
     showAppMessage("No saved program yet", [
-      "Click Save after building a program.",
+      "Click Save after building a three-stage machine.",
       "If you have a project file, use Import instead."
     ]);
     return;
   }
 
   try {
-    const blocks = JSON.parse(data);
-    loadBlocks(blocks);
+    const parsed = JSON.parse(data);
+    loadProjectData(parsed);
     showAppMessage("Program loaded", [
-      `Loaded ${blocks.length} block(s) from this app/browser.`
+      `Loaded ${countAllWorkspaceBlocks()} block(s) across the three workspace tabs.`
     ]);
   } catch (error) {
     showAppMessage("Load failed", [
@@ -2114,33 +2355,26 @@ function loadProgram() {
 }
 
 function exportProgram() {
-  const blocks = getSerializableBlocks();
-  if (!blocks.length) {
+  const project = createProjectPackage();
+  if (countAllWorkspaceBlocks(project.workspaces) === 0) {
     showAppMessage("Nothing to export", [
-      "Add some blocks to the Workspace first."
+      "Add blocks to at least one Workspace tab first."
     ]);
     return;
   }
 
-  const project = {
-    app: "CyberBlock Lab",
-    version: "0.2.0",
-    exportedAt: new Date().toISOString(),
-    blocks
-  };
   const blob = new Blob([JSON.stringify(project, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
-  const dateStamp = new Date().toISOString().slice(0, 10);
   link.href = URL.createObjectURL(blob);
-  link.download = `cyberblock-project-${dateStamp}.cyberblock`;
+  link.download = "machine.cyberblock";
   document.body.appendChild(link);
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 
-  showAppMessage("Project exported", [
-    "A .cyberblock project file was created.",
-    "Students can bring this file to another device and use Import to continue."
+  showAppMessage("Machine exported", [
+    "A machine.cyberblock file was created.",
+    "It contains all three encryption stages, so students can import it later for improvement."
   ]);
 }
 
@@ -2152,12 +2386,10 @@ function importProgramFromFile(event) {
   reader.onload = () => {
     try {
       const parsed = JSON.parse(String(reader.result || ""));
-      const blocks = Array.isArray(parsed) ? parsed : parsed.blocks;
-      if (!Array.isArray(blocks)) throw new Error("Missing blocks array.");
-      loadBlocks(blocks);
-      showAppMessage("Project imported", [
-        `Imported ${blocks.length} block(s) from ${file.name}.`,
-        "Run the program to check the result."
+      loadProjectData(parsed);
+      showAppMessage("Machine imported", [
+        `Imported ${countAllWorkspaceBlocks()} block(s) from ${file.name}.`,
+        "Check Tab 1, Tab 2, and Tab 3, then run the full machine."
       ]);
     } catch (error) {
       showAppMessage("Import failed", [
@@ -2177,14 +2409,18 @@ function importProgramFromFile(event) {
   reader.readAsText(file);
 }
 
-function loadBlocks(blocks) {
+
+function loadBlocks(blocks, options = {}) {
+  isLoadingWorkspace = true;
   workspace.querySelectorAll(".program-block").forEach((block) => block.remove());
-  blocks.forEach((block) => {
+  (blocks || []).forEach((block) => {
     const node = createProgramBlock(block.type, block.values || {});
     if (node) workspace.appendChild(node);
   });
+  isLoadingWorkspace = false;
   updateWorkspaceState();
   updatePseudoCode();
+  if (!options.skipSync) syncActiveWorkspaceBlocks();
 }
 
 const learningSamples = {
