@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberBlock Lab - Kid Friendly Encryption Blocks</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero" aria-label="CyberBlock Lab signature">
+      <div class="signature-icon" title="CyberBlock Lab">
+        <span class="signature-antenna" aria-hidden="true"></span>
+        <span class="signature-face" aria-hidden="true">
+          <span class="signature-eye left"></span>
+          <span class="signature-eye right"></span>
+        </span>
+        <span class="signature-slot" aria-hidden="true"></span>
+        <span class="signature-block one" aria-hidden="true"></span>
+        <span class="signature-block two" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <main class="app-grid">
+      <aside class="toolbox panel">
+        <div class="panel-title-row">
+          <h2>Blocks</h2>
+        </div>
+        <div class="toolbox-browser">
+          <div id="categoryTabs" class="category-tabs" aria-label="Block categories"></div>
+          <div id="blockPalette" class="block-palette" aria-label="Draggable blocks"></div>
+        </div>
+        <div id="trashBin" class="trash-bin" hidden aria-label="Recycle bin for removing workspace blocks">
+          <span class="trash-icon" aria-hidden="true">♻</span>
+          <strong>Recycle Bin</strong>
+          <span>Drag a workspace block here to remove it.</span>
+        </div>
+      </aside>
+
+      <section class="workspace-panel panel">
+        <div class="panel-title-row workspace-title">
+          <div>
+            <h2>Workspace</h2>
+            <p>Build the process step by step. Blocks run from top to bottom.</p>
+          </div>
+          <div class="workspace-actions">
+            <button id="runBtn" class="primary-button" type="button">▶ Run</button>
+            <button id="saveBtn" class="secondary-button" type="button">Save</button>
+            <button id="loadBtn" class="secondary-button" type="button">Load</button>
+            <button id="exportBtn" class="secondary-button" type="button">Export</button>
+            <button id="importBtn" class="secondary-button" type="button">Import</button>
+            <button id="clearBtn" class="danger-button" type="button">Clear</button>
+            <input id="importFileInput" type="file" accept=".cyberblock,.json,application/json" hidden />
+          </div>
+        </div>
+
+        <div id="workspace" class="workspace empty" aria-label="Program workspace">
+          <div class="empty-hint">
+            <strong>Start here!</strong>
+            <span>Click or drag blocks from the left side into this area.</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="result-panel panel">
+        <h2>Secret Machine Output</h2>
+        <div class="machine-screen">
+          <label for="liveMessage">Current Message</label>
+          <textarea id="liveMessage" rows="3" spellcheck="false" placeholder="Your encrypted result will appear here..."></textarea>
+        </div>
+
+        <section class="quick-samples" aria-label="Fast learning sample loaders">
+          <div class="quick-samples-title">
+            <h3>Learn by Samples</h3>
+            <p>Load one method, run it, then read the Run Log to see how it works.</p>
+          </div>
+
+          <div class="sample-group">
+            <span class="sample-heading">Main classroom samples</span>
+            <div class="sample-button-grid">
+              <button id="sampleCaesarBtn" class="secondary-button sample-button" type="button">Key Caesar</button>
+              <button id="sampleEnigmaBtn" class="secondary-button sample-button" type="button">Mini Enigma</button>
+            </div>
+          </div>
+
+          <div class="sample-group">
+            <span class="sample-heading">Build from pieces</span>
+            <div class="sample-button-grid">
+              <button class="secondary-button sample-button" type="button" data-load-sample="cleanText">Clean Text</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="reverse">Reverse</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="swapPairs">Swap Pairs</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="caesarPieces">Caesar +3</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="shiftVariable">Shift Variable</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="keyToShift">Key → Shift</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="reflector">Reflector</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="plugboard">Plugboard</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="customSubstitution">Substitution</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="keywordSubstitution">Keyword Alphabet</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="rotor">Rotor</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="morseEncode">Morse Encode</button>
+              <button class="secondary-button sample-button" type="button" data-load-sample="morseDecode">Morse Decode</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="output-box">
+          <div class="run-log-title-row">
+            <h3>Run Log</h3>
+            <button id="skipLogBtn" class="tiny-button" type="button">Show instantly</button>
+          </div>
+          <ol id="runLog"></ol>
+        </section>
+
+        <section class="output-box pseudo-box">
+          <h3>Program Recipe</h3>
+          <pre id="pseudoCode">No blocks yet.</pre>
+        </section>
+      </aside>
+    </main>
+
+  </div>
+
+
+
+  <div id="appMessageModal" class="app-message-modal" hidden role="dialog" aria-modal="true" aria-labelledby="appMessageTitle">
+    <div class="app-message-backdrop" data-close-message></div>
+    <div class="app-message-card" role="document">
+      <div class="app-message-header">
+        <span class="app-message-chip">SYSTEM MESSAGE</span>
+        <h3 id="appMessageTitle">Message</h3>
+        <button id="appMessageClose" class="field-modal-close" type="button" aria-label="Close message">×</button>
+      </div>
+      <div id="appMessageBody" class="app-message-body"></div>
+      <div class="app-message-actions">
+        <button id="appMessageOk" class="primary-button" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fieldModal" class="field-modal" hidden role="dialog" aria-modal="true" aria-labelledby="fieldModalTitle">
+    <div class="field-modal-backdrop" data-close-modal></div>
+    <div class="field-modal-card" role="document">
+      <div class="field-modal-header">
+        <span class="field-modal-chip">INPUT</span>
+        <h3 id="fieldModalTitle">Input value</h3>
+        <button id="fieldModalClose" class="field-modal-close" type="button" aria-label="Close input window">×</button>
+      </div>
+      <p id="fieldModalHelp" class="field-modal-help">Type a value, then update the block.</p>
+      <label id="fieldModalLabel" class="field-modal-label" for="fieldModalControl">Value</label>
+      <div id="fieldModalControlWrap" class="field-modal-control-wrap"></div>
+      <div class="field-modal-preview">
+        <span>Inputted value</span>
+        <strong id="fieldModalPreview">—</strong>
+      </div>
+      <div class="field-modal-actions">
+        <button id="fieldModalCancel" class="secondary-button" type="button">Cancel</button>
+        <button id="fieldModalSave" class="primary-button" type="button">Update Block</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="blockTemplate">
+    <div class="program-block" draggable="true">
+      <div class="block-main">
+        <span class="block-grip">⋮⋮</span>
+        <span class="block-title"></span>
+        <span class="block-fields"></span>
+        <button class="delete-block" type="button" title="Delete block">×</button>
+      </div>
+      <p class="block-description"></p>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
