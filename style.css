@@ -2042,3 +2042,8 @@ body {
   }
 }
 
+
+
+/* Sound effects:
+   Put mp3 files at assets/sounds/block-connect.mp3 and assets/sounds/block-trash.mp3.
+   JavaScript plays them when blocks connect in Workspace or are removed in Recycle Bin. */

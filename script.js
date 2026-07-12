@@ -586,12 +586,54 @@ const fieldModalClose = document.getElementById("fieldModalClose");
 let activeFieldEditor = null;
 let logTypingToken = 0;
 let latestLogItems = [];
+const soundSettings = {
+  volume: 0.45,
+  connect: "soundBlockConnect",
+  trash: "soundBlockTrash"
+};
+
+
+function initSoundEffects() {
+  Object.values(soundSettings).forEach((elementId) => {
+    const audio = document.getElementById(elementId);
+    if (!audio) return;
+    audio.volume = soundSettings.volume;
+    audio.addEventListener("error", () => {
+      audio.dataset.soundMissing = "true";
+    }, { once: true });
+  });
+}
+
+function playSoundEffect(name) {
+  const elementId = soundSettings[name];
+  const audio = document.getElementById(elementId);
+  if (!audio || audio.dataset.soundMissing === "true") return;
+
+  const source = audio.dataset.soundSrc;
+  if (!audio.getAttribute("src") && source) audio.setAttribute("src", source);
+
+  try {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = soundSettings.volume;
+    const playRequest = audio.play();
+    if (playRequest && typeof playRequest.catch === "function") {
+      playRequest.catch(() => {
+        // Some browsers block sound until a user gesture, or the mp3 may not exist yet.
+        // Keep the app silent instead of showing an error to students.
+      });
+    }
+  } catch (error) {
+    // Keep the app silent if audio cannot play.
+  }
+}
 
 function findDefinition(type) {
   return blockDefinitions.find((block) => block.type === type);
 }
 
 function init() {
+  initSoundEffects();
   renderTabs();
   renderPalette();
   bindWorkspaceEvents();
@@ -717,6 +759,7 @@ function addBlockToWorkspace(type, values = {}) {
   workspace.appendChild(newBlock);
   updateWorkspaceState();
   updatePseudoCode();
+  playSoundEffect("connect");
   newBlock.classList.add("added-pop");
   window.setTimeout(() => newBlock.classList.remove("added-pop"), 320);
   newBlock.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -747,6 +790,7 @@ function createProgramBlock(type, values = {}) {
     node.remove();
     updateWorkspaceState();
     updatePseudoCode();
+    playSoundEffect("trash");
   });
 
   node.addEventListener("dragstart", (event) => {
@@ -1023,6 +1067,9 @@ function bindWorkspaceEvents() {
       }
       newBlock.classList.add("added-pop");
       window.setTimeout(() => newBlock.classList.remove("added-pop"), 320);
+      playSoundEffect("connect");
+    } else if (draggedElement) {
+      playSoundEffect("connect");
     }
 
     updateWorkspaceState();
@@ -1054,6 +1101,7 @@ function bindTrashEvents() {
     showTrashBin(false);
     updateWorkspaceState();
     updatePseudoCode();
+    playSoundEffect("trash");
   });
 }
 
