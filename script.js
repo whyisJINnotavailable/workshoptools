@@ -14,16 +14,16 @@ const blockDefinitions = [
     type: "event_input",
     category: "Events",
     subcategory: "Start blocks",
-    title: "When Run clicked, set starting message to",
-    description: "Starts the program with a typed plain text message.",
+    title: "Start with message",
+    description: "Put the first message into the machine.",
     fields: [{ name: "message", type: "text", value: "HELLO CYBER CLUB" }]
   },
   {
     type: "event_prompt",
     category: "Events",
     subcategory: "Start blocks",
-    title: "When Run clicked, ask student for message",
-    description: "Starts the program by asking the student to type a message.",
+    title: "Ask for message",
+    description: "Ask the student to type the first message.",
     fields: []
   },
 
@@ -32,8 +32,8 @@ const blockDefinitions = [
     type: "text_uppercase",
     category: "Text",
     subcategory: "Clean the message",
-    title: "Make message UPPERCASE",
-    description: "Changes lowercase letters into uppercase letters so A-Z ciphers work clearly.",
+    title: "Make uppercase",
+    description: "Changes letters to uppercase for A-Z ciphers.",
     fields: []
   },
   {
@@ -41,15 +41,15 @@ const blockDefinitions = [
     category: "Text",
     subcategory: "Clean the message",
     title: "Remove spaces",
-    description: "Deletes spaces from the current message.",
+    description: "Removes spaces from the message.",
     fields: []
   },
   {
     type: "text_add_prefix",
     category: "Text",
     subcategory: "Join text",
-    title: "Add secret prefix",
-    description: "Adds text at the front of the message.",
+    title: "Add prefix",
+    description: "Adds text to the start of the message.",
     fields: [{ name: "prefix", type: "text", value: "LOCK-" }]
   },
 
@@ -58,80 +58,80 @@ const blockDefinitions = [
     type: "array_alphabet",
     category: "Lists",
     subcategory: "Alphabet lists",
-    title: "Use alphabet list A-Z",
-    description: "Creates the normal alphabet list for position calculations.",
+    title: "Use A-Z list",
+    description: "Loads A-Z so letters can use positions.",
     fields: []
   },
   {
     type: "array_custom",
     category: "Lists",
     subcategory: "Alphabet lists",
-    title: "Set scrambled alphabet list",
-    description: "Stores a 26-letter substitution list, such as QWERTY...",
+    title: "Set secret alphabet",
+    description: "Stores a 26-letter secret alphabet.",
     fields: [{ name: "customAlphabet", type: "text", value: "QWERTYUIOPASDFGHJKLZXCVBNM" }]
   },
   {
     type: "array_keyword",
     category: "Lists",
     subcategory: "Alphabet lists",
-    title: "Build alphabet list from keyword",
-    description: "Creates a substitution list by placing a keyword first, then the missing letters.",
+    title: "Make alphabet from key",
+    description: "Uses a key word to create a secret alphabet.",
     fields: [{ name: "keyword", type: "text", value: "DRAGON" }]
   },
   {
     type: "list_message_chars",
     category: "Lists",
     subcategory: "Character lists",
-    title: "Turn message into character list",
-    description: "Splits the message into a list of single characters.",
+    title: "Split into letters",
+    description: "Splits the message into single letters.",
     fields: []
   },
   {
     type: "list_reverse_chars",
     category: "Lists",
     subcategory: "Character lists",
-    title: "Reverse character list",
-    description: "Reorders the character list from last to first.",
+    title: "Reverse letters",
+    description: "Moves the last letter to the front.",
     fields: []
   },
   {
     type: "list_swap_pairs",
     category: "Lists",
     subcategory: "Character lists",
-    title: "Swap neighbours in character list",
-    description: "Swaps character 1 with 2, 3 with 4, and so on.",
+    title: "Swap neighbour letters",
+    description: "Swaps letters in pairs: AB becomes BA.",
     fields: []
   },
   {
     type: "list_join_chars_to_message",
     category: "Lists",
     subcategory: "Character lists",
-    title: "Join character list into message",
-    description: "Turns the character list back into the current message.",
+    title: "Join letters to message",
+    description: "Joins the letters back into one message.",
     fields: []
   },
   {
     type: "morse_table",
     category: "Lists",
     subcategory: "Morse tables",
-    title: "Use Morse code table",
-    description: "Loads the letter-to-dots-and-dashes table.",
+    title: "Use Morse table",
+    description: "Loads letters to dots and dashes.",
     fields: []
   },
   {
     type: "morse_reverse_table",
     category: "Lists",
     subcategory: "Morse tables",
-    title: "Use reverse Morse table",
-    description: "Loads the dots-and-dashes-to-letter table.",
+    title: "Use Morse decode table",
+    description: "Loads dots and dashes back to letters.",
     fields: []
   },
   {
     type: "token_split_morse",
     category: "Lists",
     subcategory: "Morse tables",
-    title: "Split Morse message into code list",
-    description: "Splits Morse text by spaces so each code can be decoded one by one.",
+    title: "Split Morse codes",
+    description: "Splits Morse text into separate codes.",
     fields: []
   },
 
@@ -140,8 +140,8 @@ const blockDefinitions = [
     type: "var_set",
     category: "Variables",
     subcategory: "Storage boxes",
-    title: "Set variable",
-    description: "Stores a value that other blocks can use later.",
+    title: "Set storage",
+    description: "Stores a value for later blocks.",
     fields: [
       { name: "varName", type: "select", value: "shift", options: ["shift", "rotor", "key", "rounds", "total"] },
       { name: "varValue", type: "text", value: "3" }
@@ -151,8 +151,8 @@ const blockDefinitions = [
     type: "var_change",
     category: "Variables",
     subcategory: "Storage boxes",
-    title: "Change variable by",
-    description: "Adds a number to a stored variable.",
+    title: "Add to storage",
+    description: "Adds a number to stored value.",
     fields: [
       { name: "varName", type: "select", value: "rotor", options: ["shift", "rotor", "rounds", "total"] },
       { name: "amount", type: "number", value: 1 }
@@ -162,48 +162,48 @@ const blockDefinitions = [
     type: "key_set_word",
     category: "Variables",
     subcategory: "Build shift from key",
-    title: "Set secret key word",
-    description: "Stores a key word, such as CAT, before calculating a shift number.",
+    title: "Set key word",
+    description: "Stores a key word before making a shift.",
     fields: [{ name: "keyText", type: "text", value: "CAT" }]
   },
   {
     type: "key_clear_total",
     category: "Variables",
     subcategory: "Build shift from key",
-    title: "Set key total to 0",
-    description: "Starts the key calculation by clearing the total number.",
+    title: "Start key total at 0",
+    description: "Starts the key number from zero.",
     fields: []
   },
   {
     type: "key_letter_value",
     category: "Variables",
     subcategory: "Build shift from key",
-    title: "Find key letter value A=1",
-    description: "Turns the current key letter into A=1, B=2, ..., Z=26.",
+    title: "Get key letter value",
+    description: "Turns key letters into numbers: A=1 to Z=26.",
     fields: []
   },
   {
     type: "key_add_letter_value_to_total",
     category: "Variables",
     subcategory: "Build shift from key",
-    title: "Add key letter value to total",
-    description: "Adds the current key letter value into the running total.",
+    title: "Add value to total",
+    description: "Adds this key letter number to the total.",
     fields: []
   },
   {
     type: "key_total_to_shift",
     category: "Variables",
     subcategory: "Build shift from key",
-    title: "Set shift = key total mod 26",
-    description: "Turns the key total into a usable alphabet shift number.",
+    title: "Make shift from total",
+    description: "Turns the key total into a shift number.",
     fields: []
   },
   {
     type: "var_key_to_shift",
     category: "Variables",
     subcategory: "Ready key helper",
-    title: "Turn key into shift",
-    description: "One-block shortcut: converts a word key into a shift number.",
+    title: "Key to shift",
+    description: "Shortcut: turns a key word into a shift.",
     fields: [{ name: "keyText", type: "text", value: "CAT" }]
   },
 
@@ -212,48 +212,48 @@ const blockDefinitions = [
     type: "loop_each_char",
     category: "Loops",
     subcategory: "Character loops",
-    title: "For each character in message",
-    description: "Runs the blocks below once for every character in the message.",
+    title: "Repeat for each letter",
+    description: "Runs inside blocks once for each letter.",
     fields: []
   },
   {
     type: "loop_each_char_end",
     category: "Loops",
     subcategory: "Character loops",
-    title: "End character loop",
-    description: "Marks where the character loop stops.",
+    title: "End letter repeat",
+    description: "Stops the letter repeat.",
     fields: []
   },
   {
     type: "loop_each_key_char",
     category: "Loops",
     subcategory: "Key loops",
-    title: "For each letter in key word",
-    description: "Runs the blocks below once for every letter in the stored key word.",
+    title: "Repeat for each key letter",
+    description: "Runs inside blocks once for each key letter.",
     fields: []
   },
   {
     type: "loop_each_key_char_end",
     category: "Loops",
     subcategory: "Key loops",
-    title: "End key loop",
-    description: "Marks where the key-word loop stops.",
+    title: "End key repeat",
+    description: "Stops the key repeat.",
     fields: []
   },
   {
     type: "loop_each_token",
     category: "Loops",
     subcategory: "Morse loops",
-    title: "For each Morse code in list",
-    description: "Runs the blocks below once for every Morse code token.",
+    title: "Repeat for each Morse code",
+    description: "Runs inside blocks once for each Morse code.",
     fields: []
   },
   {
     type: "loop_each_token_end",
     category: "Loops",
     subcategory: "Morse loops",
-    title: "End Morse loop",
-    description: "Marks where the Morse token loop stops.",
+    title: "End Morse repeat",
+    description: "Stops the Morse repeat.",
     fields: []
   },
   {
@@ -268,8 +268,8 @@ const blockDefinitions = [
     type: "loop_repeat_all",
     category: "Loops",
     subcategory: "Repeat helpers",
-    title: "Repeat all cipher blocks",
-    description: "Repeats the cipher/text blocks after this point.",
+    title: "Repeat cipher blocks",
+    description: "Repeats the cipher blocks after this.",
     fields: [{ name: "times", type: "number", value: 2 }]
   },
 
@@ -278,40 +278,40 @@ const blockDefinitions = [
     type: "char_get_alphabet_index",
     category: "Letter Math",
     subcategory: "Find positions",
-    title: "Find current letter position",
-    description: "Finds the current character position in the A-Z alphabet list.",
+    title: "Find letter position",
+    description: "Finds where the letter is in A-Z.",
     fields: []
   },
   {
     type: "char_shift_index_by_number",
     category: "Letter Math",
     subcategory: "Shift calculations",
-    title: "New position = position +",
-    description: "Adds a typed shift number and wraps around the alphabet using mod 26.",
+    title: "Shift position by",
+    description: "Adds a shift number and wraps A-Z.",
     fields: [{ name: "amount", type: "number", value: 3 }]
   },
   {
     type: "char_shift_index_by_variable",
     category: "Letter Math",
     subcategory: "Shift calculations",
-    title: "New position = position + shift variable",
-    description: "Adds the stored shift variable and wraps around using mod 26.",
+    title: "Use stored shift",
+    description: "Uses the stored shift and wraps A-Z.",
     fields: []
   },
   {
     type: "char_rotor_shift_index",
     category: "Letter Math",
     subcategory: "Rotor calculations",
-    title: "New position = position + rotor + count",
-    description: "Uses rotor position plus how many letters have already passed through the machine.",
+    title: "Use rotor shift",
+    description: "Uses rotor number plus letter count.",
     fields: []
   },
   {
     type: "char_reflect_index",
     category: "Letter Math",
     subcategory: "Reflect calculations",
-    title: "New position = 25 - position",
-    description: "Reflects the alphabet position, creating A↔Z, B↔Y, C↔X.",
+    title: "Mirror position",
+    description: "Mirrors A-Z: A↔Z, B↔Y.",
     fields: []
   },
 
@@ -320,48 +320,48 @@ const blockDefinitions = [
     type: "out_clear",
     category: "Cipher Pieces",
     subcategory: "Output builder",
-    title: "Create empty output text",
-    description: "Clears the output text before a loop builds a new message.",
+    title: "Start empty output",
+    description: "Starts a blank output message.",
     fields: []
   },
   {
     type: "out_append_current",
     category: "Cipher Pieces",
     subcategory: "Output builder",
-    title: "Append current character to output",
-    description: "Adds the current character to the output text.",
+    title: "Add current letter",
+    description: "Adds this letter to output.",
     fields: []
   },
   {
     type: "out_append_alphabet_index_or_original",
     category: "Cipher Pieces",
     subcategory: "Output builder",
-    title: "Append alphabet[new position] or original",
-    description: "Adds the calculated alphabet letter; if not a letter, keeps the original character.",
+    title: "Add shifted letter",
+    description: "Adds the new letter, or keeps symbols.",
     fields: []
   },
   {
     type: "out_append_custom_index_or_original",
     category: "Cipher Pieces",
     subcategory: "Output builder",
-    title: "Append scrambledAlphabet[position] or original",
-    description: "Adds the matching letter from the scrambled alphabet list.",
+    title: "Add secret alphabet letter",
+    description: "Adds the matching secret alphabet letter.",
     fields: []
   },
   {
     type: "message_from_output",
     category: "Cipher Pieces",
     subcategory: "Output builder",
-    title: "Replace message with output text",
-    description: "Makes the built output become the current message.",
+    title: "Use output as message",
+    description: "Makes output become the current message.",
     fields: []
   },
   {
     type: "plug_swap_current",
     category: "Cipher Pieces",
     subcategory: "Plugboard pieces",
-    title: "If current letter is A/B, swap it",
-    description: "Swaps two chosen letters in the current character before appending it.",
+    title: "Swap A and B",
+    description: "Swaps two chosen letters.",
     fields: [
       { name: "a", type: "text", value: "A" },
       { name: "b", type: "text", value: "Z" }
@@ -373,32 +373,32 @@ const blockDefinitions = [
     type: "morse_lookup_encode_current",
     category: "Encoding",
     subcategory: "Morse encode pieces",
-    title: "Look up current character in Morse table",
-    description: "Finds the Morse code for the current character.",
+    title: "Find Morse code",
+    description: "Finds dots and dashes for this letter.",
     fields: []
   },
   {
     type: "out_append_morse_current_with_space",
     category: "Encoding",
     subcategory: "Morse encode pieces",
-    title: "Append Morse code to output",
-    description: "Adds the current Morse code to the output text with spacing.",
+    title: "Add Morse code",
+    description: "Adds Morse code with spacing.",
     fields: []
   },
   {
     type: "morse_lookup_decode_current",
     category: "Encoding",
     subcategory: "Morse decode pieces",
-    title: "Look up current Morse code as letter",
-    description: "Finds the letter that matches the current Morse code token.",
+    title: "Find Morse letter",
+    description: "Finds the letter for this Morse code.",
     fields: []
   },
   {
     type: "out_append_decoded_current",
     category: "Encoding",
     subcategory: "Morse decode pieces",
-    title: "Append decoded letter to output",
-    description: "Adds the decoded Morse letter to the output text.",
+    title: "Add decoded letter",
+    description: "Adds the decoded letter to output.",
     fields: []
   },
 
@@ -407,40 +407,40 @@ const blockDefinitions = [
     type: "crypto_caesar",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Caesar shift by",
-    description: "Shortcut block: moves each letter forward/backward in the alphabet.",
+    title: "Ready: Caesar shift",
+    description: "Shortcut: shifts each letter in A-Z.",
     fields: [{ name: "shift", type: "number", value: 3 }]
   },
   {
     type: "crypto_shift_variable",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Shift using variable",
-    description: "Shortcut block: uses the stored shift variable.",
+    title: "Ready: Shift by storage",
+    description: "Shortcut: uses stored shift value.",
     fields: []
   },
   {
     type: "crypto_rotor",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Rotor shift from position",
-    description: "Shortcut block: each next letter shifts more, like a rotating wheel.",
+    title: "Ready: Rotor shift",
+    description: "Shortcut: each next letter shifts more.",
     fields: [{ name: "position", type: "number", value: 1 }]
   },
   {
     type: "crypto_reflector",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Reflector A↔Z",
-    description: "Shortcut block: turns A into Z, B into Y, C into X, and so on.",
+    title: "Ready: Mirror A-Z",
+    description: "Shortcut: mirrors letters across A-Z.",
     fields: []
   },
   {
     type: "crypto_plugboard",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Plugboard swap",
-    description: "Shortcut block: swaps two letters throughout the message.",
+    title: "Ready: Swap letters",
+    description: "Shortcut: swaps two letters everywhere.",
     fields: [
       { name: "a", type: "text", value: "A" },
       { name: "b", type: "text", value: "Z" }
@@ -450,40 +450,40 @@ const blockDefinitions = [
     type: "crypto_substitution",
     category: "Ready-Made",
     subcategory: "Complete cipher blocks",
-    title: "Substitute with custom alphabet",
-    description: "Shortcut block: replaces letters using the scrambled alphabet list.",
+    title: "Ready: Secret alphabet",
+    description: "Shortcut: replaces letters with secret alphabet.",
     fields: []
   },
   {
     type: "crypto_reverse",
     category: "Ready-Made",
     subcategory: "Complete message blocks",
-    title: "Reverse message",
-    description: "Shortcut block: flips the whole message around.",
+    title: "Ready: Reverse",
+    description: "Shortcut: flips the whole message.",
     fields: []
   },
   {
     type: "crypto_swap_pairs",
     category: "Ready-Made",
     subcategory: "Complete message blocks",
-    title: "Swap letter pairs",
-    description: "Shortcut block: changes AB CD EF into BA DC FE.",
+    title: "Ready: Swap pairs",
+    description: "Shortcut: AB becomes BA, CD becomes DC.",
     fields: []
   },
   {
     type: "crypto_morse_encode",
     category: "Ready-Made",
     subcategory: "Complete encoding blocks",
-    title: "Encode to Morse code",
-    description: "Shortcut block: encoding example, not true encryption.",
+    title: "Ready: Morse encode",
+    description: "Shortcut: letters become Morse code.",
     fields: []
   },
   {
     type: "crypto_morse_decode",
     category: "Ready-Made",
     subcategory: "Complete encoding blocks",
-    title: "Decode Morse code",
-    description: "Shortcut block: turns dots and dashes back into letters.",
+    title: "Ready: Morse decode",
+    description: "Shortcut: Morse code becomes letters.",
     fields: []
   },
 
@@ -492,24 +492,24 @@ const blockDefinitions = [
     type: "logic_password",
     category: "Logic",
     subcategory: "Cyber checks",
-    title: "Check password strength",
-    description: "Scores the current message like a password.",
+    title: "Check password",
+    description: "Checks how strong the message is as a password.",
     fields: []
   },
   {
     type: "logic_contains",
     category: "Logic",
     subcategory: "Text checks",
-    title: "If message contains",
-    description: "Adds a note to the log if the text is found.",
+    title: "Check message contains",
+    description: "Checks if the message has this text.",
     fields: [{ name: "needle", type: "text", value: "SECRET" }]
   },
   {
     type: "output_show",
     category: "Output",
     subcategory: "Show results",
-    title: "Show current message",
-    description: "Prints the current secret message into the run log.",
+    title: "Show message",
+    description: "Shows the current result in the log.",
     fields: []
   },
   {
@@ -517,7 +517,7 @@ const blockDefinitions = [
     category: "Output",
     subcategory: "Show results",
     title: "Add note",
-    description: "Writes a student explanation in the log.",
+    description: "Writes an explanation in the log.",
     fields: [{ name: "note", type: "text", value: "My encryption machine is finished!" }]
   }
 ];
@@ -1175,11 +1175,11 @@ function executeBlocks(blocks, ctx, start, end) {
     if (block.type === "loop_each_char") {
       const closeIndex = findMatchingLoopEnd(blocks, index, "loop_each_char", "loop_each_char_end", end);
       if (closeIndex === -1) {
-        addInfoLog(ctx, "Character loop skipped", ["Missing End character loop block."]);
+        addInfoLog(ctx, "Character loop skipped", ["Missing End letter repeat block."]);
         continue;
       }
       const chars = [...ctx.message];
-      addInfoLog(ctx, "For each character in message", [
+      addInfoLog(ctx, "Repeat for each letter", [
         `Characters to process: ${chars.length}.`,
         "The blocks inside the loop run once for each character."
       ]);
@@ -1199,11 +1199,11 @@ function executeBlocks(blocks, ctx, start, end) {
     if (block.type === "loop_each_key_char") {
       const closeIndex = findMatchingLoopEnd(blocks, index, "loop_each_key_char", "loop_each_key_char_end", end);
       if (closeIndex === -1) {
-        addInfoLog(ctx, "Key loop skipped", ["Missing End key loop block."]);
+        addInfoLog(ctx, "Key loop skipped", ["Missing End key repeat block."]);
         continue;
       }
       const keyChars = [...String(ctx.vars.key || "").toUpperCase()].filter((char) => /[A-Z]/.test(char));
-      addInfoLog(ctx, "For each letter in key word", [
+      addInfoLog(ctx, "Repeat for each key letter", [
         `Key word: ${formatValueForLog(ctx.vars.key)}.`,
         `Letters to process: ${keyChars.length}.`
       ]);
@@ -1223,11 +1223,11 @@ function executeBlocks(blocks, ctx, start, end) {
     if (block.type === "loop_each_token") {
       const closeIndex = findMatchingLoopEnd(blocks, index, "loop_each_token", "loop_each_token_end", end);
       if (closeIndex === -1) {
-        addInfoLog(ctx, "Morse loop skipped", ["Missing End Morse loop block."]);
+        addInfoLog(ctx, "Morse loop skipped", ["Missing End Morse repeat block."]);
         continue;
       }
       const tokens = ctx.arrays.tokens.length ? ctx.arrays.tokens : String(ctx.message || "").trim().split(/\s+/).filter(Boolean);
-      addInfoLog(ctx, "For each Morse code in list", [
+      addInfoLog(ctx, "Repeat for each Morse code", [
         `Codes to process: ${tokens.length}.`,
         "Each token is looked up in the reverse Morse table."
       ]);
@@ -1323,7 +1323,7 @@ function executeSingleBlock(block, ctx) {
       before = ctx.message;
       const answer = window.prompt("Enter a message for the secret machine:", ctx.message || "HELLO");
       ctx.message = answer ?? ctx.message;
-      addChangeLog(ctx, "When Run clicked, ask student for message", before, ctx.message, [
+      addChangeLog(ctx, "Ask for message", before, ctx.message, [
         "The typed answer becomes the new plain text input."
       ]);
       break;
@@ -1331,7 +1331,7 @@ function executeSingleBlock(block, ctx) {
     case "text_uppercase":
       before = ctx.message;
       ctx.message = ctx.message.toUpperCase();
-      addChangeLog(ctx, "Make message UPPERCASE", before, ctx.message, [
+      addChangeLog(ctx, "Make uppercase", before, ctx.message, [
         "All lowercase letters become uppercase so A-Z encryption blocks can read them clearly."
       ]);
       break;
@@ -1345,20 +1345,20 @@ function executeSingleBlock(block, ctx) {
     case "text_add_prefix":
       before = ctx.message;
       ctx.message = `${v.prefix || ""}${ctx.message}`;
-      addChangeLog(ctx, "Add secret prefix", before, ctx.message, [
+      addChangeLog(ctx, "Add prefix", before, ctx.message, [
         `Prefix added to the front: ${formatValueForLog(v.prefix || "")}.`
       ]);
       break;
     case "array_alphabet":
       ctx.arrays.alphabet = alphabet;
-      addInfoLog(ctx, "Use alphabet list A-Z", [
+      addInfoLog(ctx, "Use A-Z list", [
         `Alphabet used for letter positions: ${alphabet}.`,
         "Position examples: A=0, B=1, C=2, ..., Z=25."
       ]);
       break;
     case "array_custom":
       ctx.arrays.customAlphabet = cleanAlphabet(v.customAlphabet);
-      addInfoLog(ctx, "Set scrambled alphabet list", [
+      addInfoLog(ctx, "Set secret alphabet", [
         `Cleaned scrambled alphabet: ${ctx.arrays.customAlphabet}.`,
         `Length: ${ctx.arrays.customAlphabet.length}/26.`,
         "The substitution blocks read this list like an array."
@@ -1366,7 +1366,7 @@ function executeSingleBlock(block, ctx) {
       break;
     case "array_keyword":
       ctx.arrays.customAlphabet = keywordAlphabet(v.keyword);
-      addInfoLog(ctx, "Build alphabet list from keyword", [
+      addInfoLog(ctx, "Make alphabet from key", [
         `Keyword: ${formatValueForLog(v.keyword || "")}.`,
         `New scrambled alphabet: ${ctx.arrays.customAlphabet}.`,
         `Mapping preview: ${previewSubstitutionMap(ctx.arrays.alphabet, ctx.arrays.customAlphabet, 10)}.`
@@ -1374,21 +1374,21 @@ function executeSingleBlock(block, ctx) {
       break;
     case "list_message_chars":
       ctx.arrays.chars = [...ctx.message];
-      addInfoLog(ctx, "Turn message into character list", [
+      addInfoLog(ctx, "Split into letters", [
         `List length: ${ctx.arrays.chars.length}.`,
         `Preview: ${previewList(ctx.arrays.chars)}.`
       ]);
       break;
     case "list_reverse_chars":
       ctx.arrays.chars.reverse();
-      addInfoLog(ctx, "Reverse character list", [
+      addInfoLog(ctx, "Reverse letters", [
         "The last character moves to the front.",
         `Preview: ${previewList(ctx.arrays.chars)}.`
       ]);
       break;
     case "list_swap_pairs":
       ctx.arrays.chars = swapPairsArray(ctx.arrays.chars);
-      addInfoLog(ctx, "Swap neighbours in character list", [
+      addInfoLog(ctx, "Swap neighbour letters", [
         "Pairs are swapped: AB becomes BA, CD becomes DC.",
         `Preview: ${previewList(ctx.arrays.chars)}.`
       ]);
@@ -1396,27 +1396,27 @@ function executeSingleBlock(block, ctx) {
     case "list_join_chars_to_message":
       before = ctx.message;
       ctx.message = ctx.arrays.chars.join("");
-      addChangeLog(ctx, "Join character list into message", before, ctx.message, [
+      addChangeLog(ctx, "Join letters to message", before, ctx.message, [
         "The character array becomes the current message again."
       ]);
       break;
     case "morse_table":
       ctx.arrays.morse = morseMap;
-      addInfoLog(ctx, "Use Morse code table", [
+      addInfoLog(ctx, "Use Morse table", [
         "Loaded A-Z and 0-9 Morse mappings.",
         "Example: S→..., O→---."
       ]);
       break;
     case "morse_reverse_table":
       ctx.arrays.reverseMorse = reverseMorseMap;
-      addInfoLog(ctx, "Use reverse Morse table", [
+      addInfoLog(ctx, "Use Morse decode table", [
         "Loaded dots-and-dashes back to letters.",
         "Example: ...→S, ---→O."
       ]);
       break;
     case "token_split_morse":
       ctx.arrays.tokens = String(ctx.message || "").trim().split(/\s+/).filter(Boolean);
-      addInfoLog(ctx, "Split Morse message into code list", [
+      addInfoLog(ctx, "Split Morse codes", [
         `Tokens: ${ctx.arrays.tokens.length}.`,
         `Preview: ${previewList(ctx.arrays.tokens)}.`
       ]);
@@ -1426,7 +1426,7 @@ function executeSingleBlock(block, ctx) {
       const raw = v.varValue;
       const oldValue = ctx.vars[name];
       ctx.vars[name] = ["shift", "rotor", "rounds", "total"].includes(name) ? Number(raw) || 0 : raw;
-      addInfoLog(ctx, `Set variable ${name}`, [
+      addInfoLog(ctx, `Set storage ${name}`, [
         `Old ${name}: ${formatValueForLog(oldValue)}.`,
         `New ${name}: ${formatValueForLog(ctx.vars[name])}.`,
         "Variables are storage boxes. This block stores a value but does not encrypt the message by itself."
@@ -1448,7 +1448,7 @@ function executeSingleBlock(block, ctx) {
     case "key_set_word": {
       const key = cleanAlphabet(v.keyText || "");
       ctx.vars.key = key;
-      addInfoLog(ctx, "Set secret key word", [
+      addInfoLog(ctx, "Set key word", [
         `Key stored: ${formatValueForLog(key)}.`,
         "Now use the key loop blocks to calculate a shift number from each letter."
       ]);
@@ -1456,13 +1456,13 @@ function executeSingleBlock(block, ctx) {
     }
     case "key_clear_total":
       ctx.vars.total = 0;
-      addInfoLog(ctx, "Set key total to 0", ["The running total is ready for the key letters."]);
+      addInfoLog(ctx, "Start key total at 0", ["The running total is ready for the key letters."]);
       break;
     case "key_letter_value": {
       const upper = String(ctx.currentChar || "").toUpperCase();
       const index = alphabet.indexOf(upper);
       ctx.keyLetterValue = index >= 0 ? index + 1 : 0;
-      addInfoLog(ctx, "Find key letter value A=1", [
+      addInfoLog(ctx, "Get key letter value", [
         `Current key letter: ${formatValueForLog(upper)}.`,
         `Value: ${ctx.keyLetterValue}.`
       ]);
@@ -1471,7 +1471,7 @@ function executeSingleBlock(block, ctx) {
     case "key_add_letter_value_to_total": {
       const oldTotal = Number(ctx.vars.total || 0);
       ctx.vars.total = oldTotal + Number(ctx.keyLetterValue || 0);
-      addInfoLog(ctx, "Add key letter value to total", [
+      addInfoLog(ctx, "Add value to total", [
         `${oldTotal} + ${ctx.keyLetterValue} = ${ctx.vars.total}.`
       ]);
       break;
@@ -1479,7 +1479,7 @@ function executeSingleBlock(block, ctx) {
     case "key_total_to_shift": {
       const total = Number(ctx.vars.total || 0);
       ctx.vars.shift = mod(total, 26);
-      addInfoLog(ctx, "Set shift = key total mod 26", [
+      addInfoLog(ctx, "Make shift from total", [
         `Key total: ${total}.`,
         `Shift: ${total} mod 26 = ${ctx.vars.shift}.`
       ]);
@@ -1492,7 +1492,7 @@ function executeSingleBlock(block, ctx) {
       ctx.vars.key = key;
       ctx.vars.total = total;
       ctx.vars.shift = mod(total, 26);
-      addInfoLog(ctx, "Turn key into shift", [
+      addInfoLog(ctx, "Key to shift", [
         `Key text: ${formatValueForLog(key)}.`,
         pieces.length ? `Letter values: ${pieces.join(" + ")}.` : "No key letters were entered.",
         `Total: ${total}.`,
@@ -1505,7 +1505,7 @@ function executeSingleBlock(block, ctx) {
       const upper = String(ctx.currentChar || "").toUpperCase();
       ctx.currentIndex = ctx.arrays.alphabet.indexOf(upper);
       ctx.calcIndex = ctx.currentIndex;
-      addInfoLog(ctx, "Find current letter position", [
+      addInfoLog(ctx, "Find letter position", [
         `Current character: ${showCharChange(ctx.currentChar)}.`,
         ctx.currentIndex >= 0 ? `Position in alphabet: ${ctx.currentIndex}.` : "Not an A-Z letter, so it can be kept unchanged."
       ]);
@@ -1514,7 +1514,7 @@ function executeSingleBlock(block, ctx) {
     case "char_shift_index_by_number": {
       const amount = Number(v.amount) || 0;
       ctx.calcIndex = ctx.currentIndex >= 0 ? mod(ctx.currentIndex + amount, ctx.arrays.alphabet.length) : -1;
-      addInfoLog(ctx, "New position = position + number", [
+      addInfoLog(ctx, "Shift position by number", [
         `Shift amount: ${amount}.`,
         ctx.currentIndex >= 0 ? `(${ctx.currentIndex} + ${amount}) mod 26 = ${ctx.calcIndex}.` : "Skipped because current character is not a letter."
       ]);
@@ -1523,7 +1523,7 @@ function executeSingleBlock(block, ctx) {
     case "char_shift_index_by_variable": {
       const shift = Number(ctx.vars.shift) || 0;
       ctx.calcIndex = ctx.currentIndex >= 0 ? mod(ctx.currentIndex + shift, ctx.arrays.alphabet.length) : -1;
-      addInfoLog(ctx, "New position = position + shift variable", [
+      addInfoLog(ctx, "Shift position by shift variable", [
         `Read shift variable: ${shift}.`,
         ctx.currentIndex >= 0 ? `(${ctx.currentIndex} + ${shift}) mod 26 = ${ctx.calcIndex}.` : "Skipped because current character is not a letter."
       ]);
@@ -1533,7 +1533,7 @@ function executeSingleBlock(block, ctx) {
       const rotor = Number(ctx.vars.rotor) || 0;
       const amount = rotor + Number(ctx.currentCharNumber || 0);
       ctx.calcIndex = ctx.currentIndex >= 0 ? mod(ctx.currentIndex + amount, ctx.arrays.alphabet.length) : -1;
-      addInfoLog(ctx, "New position = position + rotor + count", [
+      addInfoLog(ctx, "Shift position by rotor + count", [
         `Rotor: ${rotor}. Letter count: ${ctx.currentCharNumber}. Shift amount: ${amount}.`,
         ctx.currentIndex >= 0 ? `(${ctx.currentIndex} + ${amount}) mod 26 = ${ctx.calcIndex}.` : "Skipped because current character is not a letter."
       ]);
@@ -1541,17 +1541,17 @@ function executeSingleBlock(block, ctx) {
     }
     case "char_reflect_index":
       ctx.calcIndex = ctx.currentIndex >= 0 ? ctx.arrays.alphabet.length - 1 - ctx.currentIndex : -1;
-      addInfoLog(ctx, "New position = 25 - position", [
+      addInfoLog(ctx, "Mirror position", [
         ctx.currentIndex >= 0 ? `25 - ${ctx.currentIndex} = ${ctx.calcIndex}.` : "Skipped because current character is not a letter."
       ]);
       break;
     case "out_clear":
       ctx.output = "";
-      addInfoLog(ctx, "Create empty output text", ["Output text is now empty and ready to be built."]);
+      addInfoLog(ctx, "Start empty output", ["Output text is now empty and ready to be built."]);
       break;
     case "out_append_current":
       ctx.output += ctx.currentChar;
-      addInfoLog(ctx, "Append current character to output", [
+      addInfoLog(ctx, "Add current letter", [
         `Appended: ${showCharChange(ctx.currentChar)}.`,
         `Output now: ${formatMessageForLog(ctx.output)}.`
       ]);
@@ -1560,7 +1560,7 @@ function executeSingleBlock(block, ctx) {
       const changed = ctx.calcIndex >= 0 && ctx.calcIndex < ctx.arrays.alphabet.length;
       const newChar = changed ? preserveCase(ctx.arrays.alphabet[ctx.calcIndex], ctx.currentChar) : ctx.currentChar;
       ctx.output += newChar;
-      addInfoLog(ctx, "Append alphabet[new position] or original", [
+      addInfoLog(ctx, "Add shifted letter", [
         changed ? `Alphabet[${ctx.calcIndex}] = ${newChar}.` : `Kept original character: ${showCharChange(ctx.currentChar)}.`,
         `Output now: ${formatMessageForLog(ctx.output)}.`
       ]);
@@ -1570,7 +1570,7 @@ function executeSingleBlock(block, ctx) {
       const valid = ctx.currentIndex >= 0 && ctx.arrays.customAlphabet.length === 26;
       const newChar = valid ? preserveCase(ctx.arrays.customAlphabet[ctx.currentIndex], ctx.currentChar) : ctx.currentChar;
       ctx.output += newChar;
-      addInfoLog(ctx, "Append scrambledAlphabet[position] or original", [
+      addInfoLog(ctx, "Add secret alphabet letter", [
         valid ? `ScrambledAlphabet[${ctx.currentIndex}] = ${newChar}.` : "Kept original because the character is not A-Z or the scrambled alphabet is incomplete.",
         `Output now: ${formatMessageForLog(ctx.output)}.`
       ]);
@@ -1579,14 +1579,14 @@ function executeSingleBlock(block, ctx) {
     case "message_from_output":
       before = ctx.message;
       ctx.message = ctx.output.replace(/\s+$/g, "");
-      addChangeLog(ctx, "Replace message with output text", before, ctx.message, [
+      addChangeLog(ctx, "Use output as message", before, ctx.message, [
         "The output built by the loop becomes the new current message."
       ]);
       break;
     case "plug_swap_current": {
       const oldChar = ctx.currentChar;
       ctx.currentChar = swapSingleCharacter(ctx.currentChar, v.a, v.b);
-      addInfoLog(ctx, "If current letter is A/B, swap it", [
+      addInfoLog(ctx, "Swap A and B", [
         `Swap pair: ${singleLetter(v.a) || "?"} ↔ ${singleLetter(v.b) || "?"}.`,
         `Current character: ${showCharChange(oldChar)} → ${showCharChange(ctx.currentChar)}.`
       ]);
@@ -1595,7 +1595,7 @@ function executeSingleBlock(block, ctx) {
     case "morse_lookup_encode_current": {
       const upper = String(ctx.currentChar || "").toUpperCase();
       ctx.currentCode = upper === " " ? "/" : (ctx.arrays.morse[upper] || ctx.currentChar);
-      addInfoLog(ctx, "Look up current character in Morse table", [
+      addInfoLog(ctx, "Find Morse code", [
         `Current character: ${showCharChange(ctx.currentChar)}.`,
         `Morse code: ${formatValueForLog(ctx.currentCode)}.`
       ]);
@@ -1603,21 +1603,21 @@ function executeSingleBlock(block, ctx) {
     }
     case "out_append_morse_current_with_space":
       ctx.output += `${ctx.currentCode} `;
-      addInfoLog(ctx, "Append Morse code to output", [
+      addInfoLog(ctx, "Add Morse code", [
         `Appended code: ${formatValueForLog(ctx.currentCode)}.`,
         `Output now: ${formatMessageForLog(ctx.output)}.`
       ]);
       break;
     case "morse_lookup_decode_current":
       ctx.currentChar = ctx.currentToken === "/" ? " " : (ctx.arrays.reverseMorse[ctx.currentToken] || "?");
-      addInfoLog(ctx, "Look up current Morse code as letter", [
+      addInfoLog(ctx, "Find Morse letter", [
         `Current Morse code: ${formatValueForLog(ctx.currentToken)}.`,
         `Decoded character: ${showCharChange(ctx.currentChar)}.`
       ]);
       break;
     case "out_append_decoded_current":
       ctx.output += ctx.currentChar;
-      addInfoLog(ctx, "Append decoded letter to output", [
+      addInfoLog(ctx, "Add decoded letter", [
         `Appended: ${showCharChange(ctx.currentChar)}.`,
         `Output now: ${formatMessageForLog(ctx.output)}.`
       ]);
@@ -1636,7 +1636,7 @@ function executeSingleBlock(block, ctx) {
       before = ctx.message;
       const shift = Number(ctx.vars.shift) || 0;
       ctx.message = shiftText(ctx.message, shift, ctx.arrays.alphabet);
-      addChangeLog(ctx, "Shift using variable", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Shift by storage", before, ctx.message, [
         `Read variable shift = ${shift}.`,
         `Rule: move each alphabet letter by ${shift}.`,
         `Examples from this message: ${previewShiftExamples(before, shift, ctx.arrays.alphabet)}.`
@@ -1657,7 +1657,7 @@ function executeSingleBlock(block, ctx) {
     case "crypto_reflector":
       before = ctx.message;
       ctx.message = atbash(ctx.message, ctx.arrays.alphabet);
-      addChangeLog(ctx, "Reflector A↔Z", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Mirror A-Z", before, ctx.message, [
         "Rule: letters are reflected across the alphabet: A↔Z, B↔Y, C↔X, and so on.",
         `Examples from this message: ${previewAtbashExamples(before, ctx.arrays.alphabet)}.`
       ]);
@@ -1667,7 +1667,7 @@ function executeSingleBlock(block, ctx) {
       const first = singleLetter(v.a);
       const second = singleLetter(v.b);
       ctx.message = plugboardSwap(ctx.message, v.a, v.b);
-      addChangeLog(ctx, "Plugboard swap", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Swap letters", before, ctx.message, [
         first && second && first !== second ? `Rule: swap every ${first} with ${second}, and every ${second} with ${first}.` : "Rule skipped: choose two different letters.",
         `Changed characters: ${countDifferentCharacters(before, ctx.message)}.`
       ]);
@@ -1683,7 +1683,7 @@ function executeSingleBlock(block, ctx) {
         ]);
       } else {
         ctx.message = substituteText(ctx.message, ctx.arrays.alphabet, ctx.arrays.customAlphabet);
-        addChangeLog(ctx, "Substitute with custom alphabet", before, ctx.message, [
+        addChangeLog(ctx, "Ready: Secret alphabet", before, ctx.message, [
           `Normal alphabet: ${ctx.arrays.alphabet}.`,
           `Custom alphabet: ${ctx.arrays.customAlphabet}.`,
           `Mapping preview: ${previewSubstitutionMap(ctx.arrays.alphabet, ctx.arrays.customAlphabet, 10)}.`
@@ -1694,14 +1694,14 @@ function executeSingleBlock(block, ctx) {
     case "crypto_reverse":
       before = ctx.message;
       ctx.message = [...ctx.message].reverse().join("");
-      addChangeLog(ctx, "Reverse message", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Reverse", before, ctx.message, [
         "Rule: the last character becomes first, and the first character becomes last."
       ]);
       break;
     case "crypto_swap_pairs":
       before = ctx.message;
       ctx.message = swapPairs(ctx.message);
-      addChangeLog(ctx, "Swap letter pairs", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Swap pairs", before, ctx.message, [
         "Rule: characters are swapped in pairs: AB becomes BA, CD becomes DC, and so on.",
         `Pair preview before: ${previewPairs(before)}.`
       ]);
@@ -1709,7 +1709,7 @@ function executeSingleBlock(block, ctx) {
     case "crypto_morse_encode":
       before = ctx.message;
       ctx.message = morseEncode(ctx.message);
-      addChangeLog(ctx, "Encode to Morse code", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Morse encode", before, ctx.message, [
         "Rule: letters and numbers become dots and dashes. Spaces become /. This is encoding, not strong encryption.",
         `Examples from this message: ${previewMorseEncodeExamples(before)}.`
       ]);
@@ -1717,12 +1717,12 @@ function executeSingleBlock(block, ctx) {
     case "crypto_morse_decode":
       before = ctx.message;
       ctx.message = morseDecode(ctx.message);
-      addChangeLog(ctx, "Decode Morse code", before, ctx.message, [
+      addChangeLog(ctx, "Ready: Morse decode", before, ctx.message, [
         "Rule: dots and dashes are translated back into letters. / becomes a space."
       ]);
       break;
     case "logic_password":
-      addInfoLog(ctx, "Check password strength", [
+      addInfoLog(ctx, "Check password", [
         `Message checked: ${formatMessageForLog(ctx.message)}.`,
         passwordScore(ctx.message)
       ]);
@@ -1730,7 +1730,7 @@ function executeSingleBlock(block, ctx) {
     case "logic_contains": {
       const needle = (v.needle || "").toUpperCase();
       const found = ctx.message.toUpperCase().includes(needle);
-      addInfoLog(ctx, "If message contains", [
+      addInfoLog(ctx, "Check message contains", [
         `Search text: ${formatValueForLog(needle)}.`,
         `Message checked: ${formatMessageForLog(ctx.message)}.`,
         found ? "Result: found." : "Result: not found."
@@ -1738,7 +1738,7 @@ function executeSingleBlock(block, ctx) {
       break;
     }
     case "output_show":
-      addInfoLog(ctx, "Show current message", [
+      addInfoLog(ctx, "Show message", [
         `Current output: ${formatMessageForLog(ctx.message)}.`,
         "This is the cipher text/encoded message after all blocks above it have finished."
       ]);
