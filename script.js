@@ -620,16 +620,39 @@ function getCategoryShortLabel(category) {
   return shortLabels[category] || category.slice(0, 2).toUpperCase();
 }
 
+function getCategoryFullLabel(category) {
+  const fullLabels = {
+    "Events": "Event",
+    "Text": "Text",
+    "Lists": "List",
+    "Variables": "Variable",
+    "Loops": "Loop",
+    "Letter Math": "Letter Math",
+    "Cipher Pieces": "Cipher Pieces",
+    "Encoding": "Encoding",
+    "Ready-Made": "Ready-Made",
+    "Logic": "Logic",
+    "Output": "Output"
+  };
+  return fullLabels[category] || category;
+}
+
 function renderTabs() {
   tabs.innerHTML = "";
   categories.forEach((category) => {
+    const isActive = category === activeCategory;
     const button = document.createElement("button");
     button.type = "button";
     button.className = `category-tab category-${category.replace(/\s+/g, "-")}`;
-    if (category === activeCategory) button.classList.add("active");
-    button.dataset.tooltip = category;
+    button.classList.toggle("active", isActive);
     button.setAttribute("aria-label", category);
-    button.innerHTML = `<span class="tab-short" aria-hidden="true">${escapeHtml(getCategoryShortLabel(category))}</span><span class="sr-only">${escapeHtml(category)}</span>`;
+    button.setAttribute("aria-pressed", String(isActive));
+
+    const label = document.createElement("span");
+    label.className = "tab-label";
+    label.textContent = isActive ? getCategoryFullLabel(category) : getCategoryShortLabel(category);
+    button.appendChild(label);
+
     button.addEventListener("click", () => {
       activeCategory = category;
       renderTabs();

@@ -1944,3 +1944,101 @@ body {
     font-size: 0.6rem;
   }
 }
+
+/* Selected category name update:
+   inactive category buttons show 1-2 letters; the selected one shows its full name. */
+.toolbox-browser {
+  grid-template-columns: clamp(92px, 8vw, 132px) minmax(0, 1fr) !important;
+  gap: clamp(8px, 0.9vw, 12px) !important;
+}
+
+.category-tabs {
+  align-items: stretch !important;
+  overflow: visible !important;
+}
+
+.category-tab {
+  width: 100% !important;
+  min-height: 42px;
+  padding: 0 8px !important;
+  font-size: clamp(0.68rem, 0.82vw, 0.9rem) !important;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease,
+    background 0.2s ease,
+    letter-spacing 0.2s ease;
+}
+
+.category-tab::after {
+  content: none !important;
+  display: none !important;
+}
+
+.category-tab .tab-short {
+  display: none !important;
+}
+
+.category-tab .tab-label {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #203040;
+  transition: transform 0.2s ease, letter-spacing 0.2s ease, opacity 0.2s ease;
+}
+
+.category-tab:not(.active) .tab-label {
+  min-width: 2ch;
+  text-align: center;
+}
+
+.category-tab.active {
+  justify-content: flex-start;
+  padding-left: 11px !important;
+  letter-spacing: 0.01em;
+  box-shadow: 4px 4px 0 rgba(38, 50, 56, 0.98), 0 0 14px rgba(56, 189, 248, 0.24);
+}
+
+.category-tab.active .tab-label {
+  transform: translateX(0);
+  letter-spacing: 0.01em;
+}
+
+.category-tab:not(.active):hover .tab-label,
+.category-tab:not(.active):focus-visible .tab-label {
+  transform: scale(1.08);
+}
+
+@media (max-width: 900px) {
+  .toolbox-browser {
+    grid-template-columns: clamp(76px, 9vw, 104px) minmax(0, 1fr) !important;
+  }
+
+  .category-tab {
+    min-height: 38px;
+    padding: 0 6px !important;
+    font-size: clamp(0.58rem, 0.78vw, 0.78rem) !important;
+  }
+
+  .category-tab.active {
+    padding-left: 8px !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .toolbox-browser {
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+  }
+
+  .category-tab {
+    min-height: 34px;
+    font-size: 0.56rem !important;
+  }
+}
+
