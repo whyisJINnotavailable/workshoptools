@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build outputs
+dist/
+*/dist/
+out/
+*/out/
+release/
+*/release/
+
+# Generated applications / installers
+*.exe
+*.msi
+*.app
+*.dmg
+*.AppImage
+*.zip
+*.7z
+*.rar
+
+# Player template EXE is generated locally; do not commit it
+player-template/StudentMachinePlayer.exe
+
+# Student/exported work
+*.cyberblock
+!student-machine-player/machine.cyberblock
+Dragon-Lock-App*/
+CyberBlock-Export*/
+Exported-*/
+
+# Logs / OS / editor
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/

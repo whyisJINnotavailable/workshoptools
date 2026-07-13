@@ -1,0 +1,42 @@
+{
+  "name": "workshoptools-exe-export-test",
+  "version": "0.1.0",
+  "description": "CyberBlock Lab WorkshopTools EXE export test",
+  "author": "CyberBlock Lab",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win portable",
+    "copy:player": "node copy-player-template.js"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.cyberblock.workshoptools",
+    "productName": "WorkshopTools",
+    "files": [
+      "index.html",
+      "script.js",
+      "style.css",
+      "main.js",
+      "preload.js",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "player-template",
+        "to": "player-template",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ]
+    }
+  }
+}
